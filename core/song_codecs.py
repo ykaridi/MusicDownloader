@@ -3,6 +3,9 @@ from dataclasses import dataclass
 
 @dataclass(frozen=True)
 class SongCodec:
+    """
+    Represents a sound codec
+    """
     mime_type: str
     extension: str
 

@@ -1,2 +1,7 @@
 # Project exclude paths
 /venv/
+config/config.py
+
+/Music/
+*.mp4
+*.m4a

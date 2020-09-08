@@ -10,13 +10,19 @@ from pylast import LastFMNetwork
 
 @dataclass(frozen=True)
 class LastFM:
+    """
+    LastFM API adapter
+    """
     api_key: str
     api_secret: str
 
     def get_track_youtube(self, track_name: str, author_name: str) -> Optional[str]:
         url = self.api.get_track(author_name, track_name).get_url()
-        result = requests.get(url).text
-        re_result = re.search(r'''data-youtube-url="(https://www.youtube.com/.*)"''', result)
+        result = requests.get(url).text.replace('\n', '')
+        re_result = re.search(
+            r'''<a.*play-this-track-playlink--youtube.*data-youtube-url="(https:\/\/www\.youtube\.com\/[^"]*)"''',
+            result
+        )
         return re_result.group(1) if re_result is not None else None
 
     @cached_property

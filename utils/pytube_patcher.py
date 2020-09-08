@@ -72,6 +72,7 @@ _patched = False
 
 
 def patch():
+    """Patch bug in PyTube"""
     global _patched
     if not _patched:
         pytube.__main__.apply_descrambler = _apply_descrambler
