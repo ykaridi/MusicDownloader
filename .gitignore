@@ -7,3 +7,4 @@ config/config.py
 *.m4a
 
 main.py
+.cache

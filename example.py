@@ -10,5 +10,5 @@ SUFFIX = FLAVOUR if (FLAVOUR and FLAVOUR.lower() != 'audio') else None
 if __name__ == '__main__':
     if not BASE.exists():
         BASE.mkdir()
-    
+
     download_album("A Head Full of Dreams", artist="Coldplay")
