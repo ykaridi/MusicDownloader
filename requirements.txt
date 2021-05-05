@@ -3,10 +3,10 @@ chardet==3.0.4
 idna==2.10
 mutagen==1.45.1
 pylast==3.3.0
-pytube3==9.6.4
+pytube==10.7.2
 requests==2.24.0
 six==1.15.0
 spotipy==2.15.0
 typing-extensions==3.7.4.3
 urllib3==1.25.10
-youtube-search==1.1.0
+youtube-search==2.1.0

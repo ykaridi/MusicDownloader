@@ -10,7 +10,7 @@ class AlbumInformationProvider(ABC):
     """
 
     @abstractmethod
-    def search_album(self, album: str, artist: str = None) -> Iterable[str, Tuple[SongInformation, ...]]:
+    def search_album(self, album: str, artist: str = None) -> Iterable[Tuple[str, Tuple[SongInformation, ...]]]:
         """
         Searches for an album
         :param album:
