@@ -35,7 +35,8 @@ def find_on_youtube(track_information: SongInformation, *, flavour: str = "Audio
 
 @ScopeResolver('base', 'suffix', 'suffix_song', 'track_resolver', 'retries')
 def download_song(name: str, *, album: str = None, artist: str = None, base: Union[str, Path] = ".", suffix: str = None,
-                  suffix_song: bool = False, track_resolver: Callable[[SongInformation], Song] = find_on_youtube, retries: int = 3):
+                  suffix_song: bool = False, track_resolver: Callable[[SongInformation], Song] = find_on_youtube,
+                  retries: int = 3):
     """
     Downloads song given song name and (optional) album name
     :param name: Song name
@@ -48,6 +49,8 @@ def download_song(name: str, *, album: str = None, artist: str = None, base: Uni
     :param retries: Number of attempts to download song [Resolved implicitly by scope]
     """
     base = base if isinstance(base, Path) else Path(base)
+    base.mkdir(exist_ok=True)
+
     track_information = spotify_provider.search_song(name, album, artist)
     for idx in range(retries):
         try:
@@ -82,7 +85,7 @@ def download_album(name: str, *, artist: str = None, base: Union[str, Path] = ".
     album_name, tracks = spotify_provider.search_album(name, artist)
     print("Downling %s" % album_name)
     base = base if isinstance(base, Path) else Path(base)
-    base /= album_name + ("" if suffix is None else " %s" % suffix)
+    base /= album_name + ("" if (suffix is None or not suffix_album) else " %s" % suffix)
     if not base.exists():
         base.mkdir()
     for track_information in tracks:

@@ -11,7 +11,7 @@ class PNGSongImage:
     used internally for cover images
     """
 
-    payload: bytes
+    payload: bytes = field(repr=False)
 
 
 @dataclass(frozen=True)
@@ -21,7 +21,7 @@ class JPEGSongImage:
     used internally for cover images
     """
 
-    payload: bytes
+    payload: bytes = field(repr=False)
 
 
 @dataclass(frozen=True)

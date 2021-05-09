@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Union
 
@@ -27,7 +27,7 @@ class Song(AlterableDataclass):
     Contains actual song (payload and codec), and additional information about it (see SongInformation).
     """
 
-    payload: bytes
+    payload: bytes = field(repr=False)
     codec: SongCodec
     information: SongInformation
 

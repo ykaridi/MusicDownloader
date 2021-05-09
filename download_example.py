@@ -5,6 +5,7 @@ from downloaders import download_album
 BASE = Path("Music")
 FLAVOUR = "Acoustic"
 SUFFIX = FLAVOUR if (FLAVOUR and FLAVOUR.lower() != 'audio') else None
+SUFFIX_ALBUM = True
 
 
 if __name__ == '__main__':
