@@ -1,13 +1,7 @@
 from dataclasses import dataclass
 from functools import cached_property
-from typing import Optional, Tuple, Dict, Union
-
-import requests
 from spotipy import Spotify
 from spotipy.oauth2 import SpotifyClientCredentials
-
-from core import SongInformation
-from core.song_information import PNGSongImage, JPEGSongImage
 
 
 @dataclass(frozen=True)

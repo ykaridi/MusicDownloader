@@ -34,7 +34,7 @@ class Song(AlterableDataclass):
     def save(self, path: Union[str, Path]):
         """Save song to filesystem, including metadata"""
         path = path if isinstance(path, str) else str(path)
-        path = "%s.%s" % (path, self.codec.extension)
+        path = f"{path}.{self.codec.extension}"
         with open(path, 'wb') as file:
             file.write(self.payload)
 

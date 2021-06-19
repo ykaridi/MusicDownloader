@@ -52,20 +52,17 @@ class SongInformation(AlterableDataclass):
     def __str__(self):
         song_str = self.name
         if self.year is not None:
-            song_str = "%s (%d)" % (song_str, self.year)
+            song_str = f"{song_str} ({self.year})"
         if self.album is not None:
             if self.track_number is not None:
-                song_str = "%s @ %s/%d" % (song_str, self.album, self.track_number[0])
+                song_str = f"{song_str} @ {self.album}/{self.track_number[0]}"
             else:
-                song_str = "%s @ %s" % (song_str, self.album)
+                song_str = f"{song_str} @ {self.album}"
         if self.artists is not None:
-            if len(self.artists) == 1:
-                song_str = "%s by %s" % (song_str, self.artists[0])
-            else:
-                song_str = "%s by %s" % (song_str, "(%s)" % ", ".join(self.artists))
+            song_str = f"{song_str} by {', '.join(self.artists)}"
         if self.genre is not None:
-            song_str = "%s [%s]" % (song_str, self.genre)
+            song_str = f"{song_str} [{self.genre}]"
         if self.additional_information is not None:
-            song_str = "%s; %s" % (song_str, self.additional_information)
+            song_str = f"{song_str}; {self.additional_information}"
 
         return song_str

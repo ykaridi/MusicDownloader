@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Tuple, Iterable
+from typing import Tuple
 
 from ..song_information import SongInformation
 
@@ -10,7 +10,7 @@ class AlbumInformationProvider(ABC):
     """
 
     @abstractmethod
-    def search_album(self, album: str, artist: str = None) -> Iterable[Tuple[str, Tuple[SongInformation, ...]]]:
+    def search_album(self, album: str, artist: str = None) -> Tuple[str, Tuple[SongInformation, ...]]:
         """
         Searches for an album
         :param album:

@@ -15,9 +15,9 @@ class ImplicitResolution:
             first_name: str
             surname: str
 
-            @ImplicitResolution(fullname=lambda self, *args, **kwargs: "%s %s" % (self.first_name, self.surname))
+            @ImplicitResolution(fullname=lambda self, *args, **kwargs: f"{self.first_name} {self.surname}")
             def greet(self, fullname: str):
-                print("Hello %s!" % fullname)
+                print(f"Hello {fullname}!")
 
     (More complex) Example:
         def resolve_separator(self, *args, **kwargs):

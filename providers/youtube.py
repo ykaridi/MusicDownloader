@@ -27,4 +27,4 @@ class YoutubeProvider(URLedSongProvider, NamedSongProvider):
 
     def find_song_by_name(self, name: str, *, codec: SongCodec = MP4_AUDIO) -> Song:
         search = YoutubeSearch(name).videos[0]
-        return self.find_song_by_url("https://youtube.com/watch?v=%s" % search['id'])
+        return self.find_song_by_url(f"https://youtube.com/watch?v={search['id']}")

@@ -11,12 +11,23 @@ MediaSeekCb = ctypes.CFUNCTYPE(ctypes.c_int, ctypes.c_void_p, ctypes.c_uint64)
 MediaCloseCb = ctypes.CFUNCTYPE(ctypes.c_void_p, ctypes.c_void_p)
 
 
-# This is to prevent Bytes IOs from being freed
-BYTE_IOS = []
+class ByteStreamWrapper:
+    def __init__(self, byts: bytes):
+        self.bytes = byts
+        self.stream = None
+
+    def open(self):
+        self.stream = BytesIO(self.bytes)
+
+    def close(self):
+        self.stream.close()
 
 
 @MediaOpenCb
 def media_open_cb(opaque, data_pointer, size_pointer):
+    stream_wrapper: ByteStreamWrapper = ctypes.cast(opaque, ctypes.POINTER(ctypes.py_object)).contents.value
+    stream_wrapper.open()
+
     data_pointer.contents.value = opaque
     size_pointer.contents.value = sys.maxsize
     return 0
@@ -24,7 +35,7 @@ def media_open_cb(opaque, data_pointer, size_pointer):
 
 @MediaReadCb
 def media_read_cb(opaque, buffer, length):
-    stream = ctypes.cast(opaque, ctypes.POINTER(ctypes.py_object)).contents.value
+    stream: BytesIO = ctypes.cast(opaque, ctypes.POINTER(ctypes.py_object)).contents.value.stream
     new_data = stream.read(length)
     for i in range(len(new_data)):
         buffer[i] = new_data[i]
@@ -33,16 +44,15 @@ def media_read_cb(opaque, buffer, length):
 
 @MediaSeekCb
 def media_seek_cb(opaque, offset):
-    stream = ctypes.cast(opaque, ctypes.POINTER(ctypes.py_object)).contents.value
+    stream: BytesIO = ctypes.cast(opaque, ctypes.POINTER(ctypes.py_object)).contents.value.stream
     stream.seek(offset)
     return 0
 
 
 @MediaCloseCb
 def media_close_cb(opaque):
-    stream = ctypes.cast(opaque, ctypes.POINTER(ctypes.py_object)).contents.value
-    BYTE_IOS.remove(stream)
-    stream.close()
+    stream_wrapper: ByteStreamWrapper = ctypes.cast(opaque, ctypes.POINTER(ctypes.py_object)).contents.value
+    stream_wrapper.close()
 
 
 def media_from_mp4_bytes(*songs: bytes) -> vlc.MediaListPlayer:
@@ -51,7 +61,7 @@ def media_from_mp4_bytes(*songs: bytes) -> vlc.MediaListPlayer:
 
     media_list: vlc.MediaList = instance.media_list_new()
     for song in songs[::-1]:
-        bytes_io = BytesIO(song)
+        bytes_io = ByteStreamWrapper(song)
         media = instance.media_new_callbacks(
             media_open_cb,
             media_read_cb,
@@ -60,7 +70,6 @@ def media_from_mp4_bytes(*songs: bytes) -> vlc.MediaListPlayer:
             ctypes.cast(ctypes.pointer(ctypes.py_object(bytes_io)), ctypes.c_void_p)
         )
         media_list.insert_media(media, 0)
-        BYTE_IOS.append(bytes_io)
 
     player.set_media_list(media_list)
     return player
