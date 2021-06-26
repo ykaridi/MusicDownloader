@@ -43,7 +43,7 @@ class Song(AlterableDataclass):
             MP4_ALBUM: self.information.album,
             MP4_ARTISTS: "; ".join(self.information.artists) if self.information.artists is not None else None,
             MP4_TRACK_NUMBER: (self.information.track_number, ) if self.information.album is not None else None,
-            MP4_YEAR: str(self.information.year),
+            MP4_YEAR: str(self.information.year) if self.information.year else None,
             MP4_GENRE: self.information.genre,
             MP4_COVER_IMAGE: (MP4Cover(self.information.cover_image.payload,
                                        imageformat=MP4Cover.FORMAT_PNG

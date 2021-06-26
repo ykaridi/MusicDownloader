@@ -56,7 +56,7 @@ def download_song(name: str, *, album: str = None, artist: str = None, base: Uni
     for idx in range(retries):
         try:
             print(f"Downloading {track_information.name} ({idx + 1} / {retries} tries)")
-            if suffix_song:
+            if suffix_song and suffix:
                 track_information = track_information.altered(name="%s (%s)" % (track_information.name, suffix))
 
             track_resolver(track_information).altered(information=track_information).save(
@@ -94,14 +94,14 @@ def download_album(name: str, *, artist: str = None, base: Union[str, Path] = ".
         for idx in range(retries):
             try:
                 print(f"\tDownloading {track_information.name} ({idx + 1} / {retries} tries)")
-                if suffix_song:
+                if suffix_song and suffix:
                     track_information = track_information.altered(name=f"{track_information.name} ({suffix})")
                 filename = track_information.name.replace('/', ' ').replace('.', ' ')
 
                 if track_information.track_number and track_information.track_number[0]:
                     track_number_digits = max(ceil(log10(track_information.track_number[1] or 1)), 2)
                     filename = f"{str(track_information.track_number[0]).rjust(track_number_digits, '0')} {filename}"
-                if suffix_album:
+                if suffix_album and suffix:
                     track_information = track_information.altered(album=f"{track_information.album} ({suffix})")
 
                 track_resolver(track_information).altered(information=track_information).\
@@ -127,7 +127,7 @@ def download_playlist(playlist_id: str, *, base: Union[str, Path] = ".", suffix:
     :param retries: Number of attempts to download song [Resolved implicitly by scope]
     """
     playlist_name, tracks = spotify_provider.get_playlist(playlist_id)
-    print("Downloading %s" % playlist_name)
+    print("Downloading %s (%d tracks)" % (playlist_name, len(tracks)))
     base = base if isinstance(base, Path) else Path(base)
     base /= playlist_name + ("" if (suffix is None or not suffix_playlist) else " %s" % suffix)
     if not base.exists():
@@ -138,14 +138,14 @@ def download_playlist(playlist_id: str, *, base: Union[str, Path] = ".", suffix:
         for idx in range(retries):
             try:
                 print(f"\tDownloading {track_information.name} ({idx + 1} / {retries} tries)")
-                if suffix_song:
+                if suffix_song and suffix:
                     track_information = track_information.altered(name=f"{track_information.name} ({suffix})")
                 filename = track_information.name.replace('/', ' ').replace('.', ' ')
 
                 if track_information.track_number:
                     filename = f"{str(track_number + 1).rjust(track_number_digits, '0')} {filename}"
 
-                if suffix_playlist:
+                if suffix_playlist and suffix:
                     track_information = track_information.altered(album=f"{track_information.album} ({suffix})")
 
                 track_resolver(track_information).altered(information=track_information).\

@@ -67,7 +67,7 @@ class SpotifyProvider(SongInformationProvider, AlbumInformationProvider):
     def _all_items(self, result: dict) -> Iterator[dict]:
         while result is not None:
             yield from result['items']
-            result = self.api.next(result['next']) if result['next'] else None
+            result = self.api.next(result) if result['next'] else None
 
     def _search(self, query_type: str, limit: int = 10, **query: Optional[str]) -> Iterator[dict]:
         """Perform a Spotify query"""
@@ -120,4 +120,5 @@ class SpotifyProvider(SongInformationProvider, AlbumInformationProvider):
             name = self.api.playlist(playlist_id)['name']
             return name, tuple(self._get_playlist(playlist_id))
         except:  # noqa
+            raise
             raise ValueError("No such playlist")
